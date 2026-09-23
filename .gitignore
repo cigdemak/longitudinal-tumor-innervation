@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+*.h5
+*.h5ad
+*.hdf5
+outputs/
+data/
+PPA_axon_subtypes_*/
+.env
+.env.*
