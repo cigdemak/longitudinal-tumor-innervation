@@ -63,6 +63,10 @@ tokens as the patient ID (`016_1`). To supply a different verified mapping,
 use `--patient-map mapping.csv` with columns `unique_region,patient_id`.
 Conflicting progression labels within a mapped patient cause an error.
 The original CN model retains its separate A/B sample IDs.
+For BL, each numeric `unique_region` identifies one patient.
+[Figure-specific statements](FIGURE_SAMPLE_STATEMENTS.md) report patient and
+region counts and how repeated observations are handled for all 31 figures;
+[comparison-specific counts](manifests/figure_sample_counts.csv) are also included.
 
 The local abundance, PD1 progression-effect, and radial-redistribution panels
 use [archived/local_progression_statistics.csv](archived/local_progression_statistics.csv).
