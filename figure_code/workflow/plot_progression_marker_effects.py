@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replot progression marker-specific story panels as separate manuscript figures."""
+"""Plot archived progression-associated marker effects."""
 
 from __future__ import annotations
 

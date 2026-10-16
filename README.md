@@ -1,76 +1,33 @@
-# Axon–immune manuscript figures
+# Manuscript code
 
-Reproduce the 31 figures in the manuscript figure collection from annotated
-H5AD files. **The H5 workflow generates 28 figures (including the color-scale
-legend); three original effect panels use included archived statistics.**
+Code accompanying Ak, Ait-Ahmad et al., “Longitudinal Analysis of Tumor Innervation Identifies Dynamic Neuroimmune Niches in Prostate Cancer,” submitted to *Nature Cancer*.
 
-## Run
+Annotated data tables are available from [Zenodo](https://zenodo.org/records/22968980).
+Use [zenodo_upload_inputs.txt](zenodo_upload_inputs.txt) to collect the files needed to reproduce the listed figure panels.
 
-Use Python 3.12:
+## Run a figure script
+
+Use Python 3.12. Create the environment once, then run any script from the repository root:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-python run.py --data-root /path/to/input-folder
+python figure_code/figure_4a_cn_heatmap.py --data-dir /path/to/zenodo-data
 ```
 
-The input folder must contain:
+For the existing sibling-folder layout, run with `--data-dir ..` from the repository root.
 
-```text
-input-folder/
-├── data/                                       # four cohort H5AD files
-└── PPA_axon_subtypes_marker_split_T_cells/      # eight ACED marker/axon H5AD files
-```
+## Figure scripts
 
-Exact filenames, sizes, and SHA256 checksums are in
-[manifests/inputs.csv](manifests/inputs.csv). H5 files are supplied separately,
-not included in this repository. Inputs already contain cell annotations,
-CN labels, and `uns/ppa_result_20`, `_50`, and `_100` neighborhoods; this
-repository starts from those annotations and stored neighborhoods.
+- `figure_4a_cn_heatmap.py` (Figure 4a)
+- `figure_4bc_whole_tissue.py` (Figure 4b–c)
+- `figure_4e_window_density.py` (Figure 4e)
+- `figure_5b_cn_progression.py` (Figure 5b)
+- `figure_5d_local_redistribution.py` (Figure 5d)
+- `figure_6a_pd1_composition.py` (Figure 6a)
+- `figure_6b_whole_tissue_markers.py` (Figure 6b)
+- `figure_6cd_axon_marker_fractions.py` (Figure 6c–d)
+- `figure_6ef_progression_effects.py` (Figure 6e–f)
 
-Outputs:
-
-- `outputs/figures/`: PDF/PNG figures and SVG where supported.
-- `outputs/analysis/`: regenerated analysis tables and intermediate exports.
-- `outputs/generated_figures.csv`: figure provenance and statistical units.
-- `outputs/logs/` and `outputs/run_provenance.json`: commands and environment.
-
-## Options
-
-```bash
-python run.py --data-root /path/to/input-folder --check-inputs --verify-inputs
-python run.py --data-root /path/to/input-folder --resume
-python run.py --data-root /path/to/input-folder --stages markers patients
-python run.py --stages archived
-python -m unittest discover -s tests -v
-python verify_figures.py
-```
-
-Stages: `whole_tissue`, `markers`, `patients`, `windows`, `cn`, `archived`.
-Use `--output-dir` to choose the output folder; `--plan` prints the commands.
-The `patients` stage automatically includes `markers`.
-The full run reproduced all 31 reference PNGs exactly; see [VALIDATION.md](VALIDATION.md).
-
-## Reproduction scope
-
-[manifests/figures.csv](manifests/figures.csv) lists each figure, its stage,
-statistical unit, and p/q annotation. Existing statistical choices are
-preserved, including region/sample-level tests without patient clustering.
-
-Patient sensitivity figures pool ACED regions using the first two filename
-tokens as the patient ID (`016_1`). To supply a different verified mapping,
-use `--patient-map mapping.csv` with columns `unique_region,patient_id`.
-Conflicting progression labels within a mapped patient cause an error.
-The original CN model retains its separate A/B sample IDs.
-For BL, each numeric `unique_region` identifies one patient.
-[Figure-specific statements](FIGURE_SAMPLE_STATEMENTS.md) report patient and
-region counts and how repeated observations are handled for all 31 figures;
-[comparison-specific counts](manifests/figure_sample_counts.csv) are also included.
-
-The local abundance, PD1 progression-effect, and radial-redistribution panels
-use [archived/local_progression_statistics.csv](archived/local_progression_statistics.csv).
-Their original fitting code is unavailable; these three model fits are **not
-recomputed from H5**. The archive retains the full correction families.
-The other local marker counts are reconstructed from stored PPA rows,
-including overlapping cell–axon-neighborhood occurrences.
+See [zenodo_upload_inputs.txt](zenodo_upload_inputs.txt) for the required files.

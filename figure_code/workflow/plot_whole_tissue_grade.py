@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replot whole-tissue grade overview panels as separate manuscript figures."""
+"""Plot whole-tissue composition and immune metrics by tumor grade."""
 
 from __future__ import annotations
 

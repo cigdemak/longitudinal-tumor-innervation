@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create manuscript-ready cellular-neighborhood cell-type heatmaps.
+"""Plot cellular-neighborhood cell-type heatmaps.
 
 This script reproduces the heatmap idea from the neighborhood notebook using
 the CN labels already stored in the AnnData files. For each cohort and CN, it

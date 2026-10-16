@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replot the progression local-redistribution heatmap as a transposed manuscript panel."""
+"""Plot progression-associated local cell redistribution around axons."""
 
 from __future__ import annotations
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replot the PD1 progression raw-composition donuts with larger manuscript fonts."""
+"""Plot PD1-positive and PD1-negative T-cell composition around axons."""
 
 from __future__ import annotations
 

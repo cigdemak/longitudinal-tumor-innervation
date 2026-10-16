@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Axon-local immune enrichment with ACED and BL combined at plotting."""
+"""Analyze axon-window enrichment in the ACED and BL cohorts."""
 
 from __future__ import annotations
 

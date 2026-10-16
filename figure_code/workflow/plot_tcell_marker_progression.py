@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replot whole-tissue T-cell marker grade panels as separate manuscript figures."""
+"""Plot whole-tissue T-cell marker panels by progression status."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import argparse
 import os
 from pathlib import Path
 
-DEFAULT_RESULT_DIR = Path("manuscript_panels_results/whole_tissue_tcell_marker_grade_updated/combined")
+DEFAULT_RESULT_DIR = Path("manuscript_panels_results/whole_tissue_tcell_marker_progression_updated")
 DEFAULT_FIGURE_DIR = DEFAULT_RESULT_DIR / "figures"
 DEFAULT_TABLE_DIR = DEFAULT_RESULT_DIR / "tables"
 
@@ -26,18 +26,20 @@ import pandas as pd
 import seaborn as sns
 
 
-GROUP_ORDER = ["Low-grade", "High-grade"]
-MARKER_ORDER = ["AR", "GZMB", "PD1"]
-PALETTE = {"Low-grade": "#3A78A2", "High-grade": "#B74E4E"}
+GROUP_COL = "progression"
+GROUP_ORDER = ["NonProgressor", "Progressor"]
+GROUP_LABELS = {"NonProgressor": "Non-progressor", "Progressor": "Progressor"}
+MARKER_ORDER = ["AR", "Ki67", "GZMB", "PD1"]
+PALETTE = {"NonProgressor": "#4C78A8", "Progressor": "#F58518"}
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Make separate no-title manuscript panels from whole-tissue T-cell marker grade tables."
+        description="Make separate no-title manuscript panels from whole-tissue T-cell marker progression tables."
     )
     parser.add_argument("--table-dir", type=Path, default=DEFAULT_TABLE_DIR)
     parser.add_argument("--figure-dir", type=Path, default=DEFAULT_FIGURE_DIR)
-    parser.add_argument("--prefix", default="fig_whole_tissue_tcell_marker_grade")
+    parser.add_argument("--prefix", default="fig_whole_tissue_tcell_marker_progression")
     return parser.parse_args()
 
 
@@ -70,10 +72,18 @@ def save_figure(fig: plt.Figure, output_base: Path) -> None:
 
 
 def add_bottom_legend(fig: plt.Figure, font_size: float) -> None:
-    handles = [Patch(facecolor=PALETTE[group], edgecolor="black", linewidth=1.8, label=group) for group in GROUP_ORDER]
+    handles = [
+        Patch(
+            facecolor=PALETTE[group],
+            edgecolor="black",
+            linewidth=1.8,
+            label=GROUP_LABELS.get(group, group),
+        )
+        for group in GROUP_ORDER
+    ]
     fig.legend(
         handles=handles,
-        labels=GROUP_ORDER,
+        labels=[GROUP_LABELS.get(group, group) for group in GROUP_ORDER],
         frameon=False,
         loc="upper center",
         ncol=len(GROUP_ORDER),
@@ -110,7 +120,7 @@ def marker_upper_whisker(data: pd.DataFrame, marker: str, metric: str) -> float:
     tops = []
     marker_data = data.loc[data["marker"].astype(str).eq(marker)]
     for group in GROUP_ORDER:
-        top = tukey_upper_whisker(marker_data.loc[marker_data["condition"].eq(group), metric])
+        top = tukey_upper_whisker(marker_data.loc[marker_data[GROUP_COL].eq(group), metric])
         if np.isfinite(top):
             tops.append(top)
     return max(tops) if tops else np.nan
@@ -142,14 +152,14 @@ def annotate_significance(ax: plt.Axes, tests: pd.DataFrame, markers: list[str],
 
 def plot_whole_sample_fraction(summary: pd.DataFrame, output_base: Path) -> None:
     markers = ordered_markers(summary)
-    fig, ax = plt.subplots(figsize=(9.2, 9.6))
+    fig, ax = plt.subplots(figsize=(10.2, 9.6))
     bar_width = 0.34
     offsets = np.array([-bar_width / 1.8, bar_width / 1.8])
     x = np.arange(len(markers))
 
     for offset, group in zip(offsets, GROUP_ORDER):
         values = (
-            summary.loc[summary["condition"].eq(group)]
+            summary.loc[summary[GROUP_COL].eq(group)]
             .set_index("marker")
             .reindex(markers)["positive_fraction"]
             .to_numpy(dtype=float)
@@ -187,13 +197,13 @@ def plot_region_metric(
 ) -> None:
     data = region.copy()
     markers = ordered_markers(data)
-    fig, ax = plt.subplots(figsize=(9.6, 9.8))
+    fig, ax = plt.subplots(figsize=(10.2, 9.8))
 
     sns.boxplot(
         data=data,
         x="marker",
         y=metric,
-        hue="condition",
+        hue=GROUP_COL,
         order=markers,
         hue_order=GROUP_ORDER,
         orient="v",
@@ -225,13 +235,11 @@ def main() -> None:
 
     table_dir = args.table_dir
     figure_dir = args.figure_dir
-    summary = pd.read_csv(table_dir / "whole_tissue_tcell_marker_grade_summary.csv")
-    region = pd.read_csv(table_dir / "whole_tissue_tcell_marker_grade_region_stats.csv")
-    fraction_tests = pd.read_csv(table_dir / "whole_tissue_tcell_marker_grade_region_fraction_tests.csv")
-    density_tests = pd.read_csv(table_dir / "whole_tissue_tcell_marker_grade_density_tests.csv")
+    summary = pd.read_csv(table_dir / "whole_tissue_tcell_marker_progression_summary.csv")
+    region = pd.read_csv(table_dir / "whole_tissue_tcell_marker_progression_region_stats.csv")
+    fraction_tests = pd.read_csv(table_dir / "whole_tissue_tcell_marker_progression_region_fraction_tests.csv")
+    density_tests = pd.read_csv(table_dir / "whole_tissue_tcell_marker_progression_density_tests.csv")
     region["marker_positive_density_x1e6"] = region["marker_positive_density_proxy"] * 1_000_000.0
-    density_tests = density_tests.copy()
-    density_tests["endpoint"] = "marker_positive_density_x1e6"
 
     plot_whole_sample_fraction(
         summary,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CN neighborhood enrichment using the provided notebook method exactly.
+"""Analyze cellular-neighborhood enrichment during progression.
 
 The model follows the notebook structure:
 

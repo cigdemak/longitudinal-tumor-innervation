@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replot progression marker-composition barplots with manuscript-ready styling."""
+"""Plot PD1- or GZMB-positive T-cell fractions across axons and radii."""
 
 from __future__ import annotations
 

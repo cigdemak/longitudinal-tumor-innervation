@@ -113,9 +113,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-dir", type=Path, required=True)
     parser.add_argument("--outdir", type=Path, default=Path("significance_axons_immune_cells"))
+    parser.add_argument("--markers", nargs="+", choices=MARKERS, default=list(MARKERS))
     args = parser.parse_args()
     comps, metrics = [], []
-    for marker in MARKERS:
+    for marker in args.markers:
         for tag in AXONS:
             path = args.input_dir / f"aced_immune_{marker}_{tag}_ppa.h5ad"
             composition, abundance = extract_file(path, marker, tag)
@@ -132,7 +133,7 @@ def main() -> None:
     composition.to_csv(compdir / "marker_positive_fraction_region_level.csv", index=False)
     abundance.to_csv(metricdir / "tcell_marker_region_level_metrics.csv", index=False)
     composition_tests(composition).to_csv(compdir / "progression/progression_marker_positive_fraction_stats.csv", index=False)
-    print(f"Rebuilt {len(composition)} composition rows and {len(abundance)} abundance rows from eight H5AD inputs.")
+    print(f"Rebuilt {len(composition)} composition rows and {len(abundance)} abundance rows from {len(args.markers) * len(AXONS)} H5AD inputs.")
 
 
 if __name__ == "__main__":

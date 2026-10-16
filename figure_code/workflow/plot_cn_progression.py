@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create a manuscript-ready ACED progression CN enrichment heatmap."""
+"""Plot cellular-neighborhood enrichment during ACED progression."""
 
 from __future__ import annotations
 
