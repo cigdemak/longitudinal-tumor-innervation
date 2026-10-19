@@ -3,11 +3,7 @@
 Code accompanying Ak, Ait-Ahmad et al., “Longitudinal Analysis of Tumor Innervation Identifies Dynamic Neuroimmune Niches in Prostate Cancer,” submitted to *Nature Cancer*.
 
 The H5AD inputs needed to reproduce the figure panels are listed in
-[zenodo_upload_inputs.txt](zenodo_upload_inputs.txt). The analysis scripts read
-the cell-level observations and PPA neighborhood tables stored in those files.
-The Zenodo-facing filenames use the manuscript cohort labels AS (tumor) and RP
-(benign/reference prostate); the runner also recognizes the original analysis
-filenames in the local project folders.
+[zenodo_upload_inputs.txt](zenodo_upload_inputs.txt).
 
 ## Run a figure script
 
