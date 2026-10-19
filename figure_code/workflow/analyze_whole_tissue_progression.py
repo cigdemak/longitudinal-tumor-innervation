@@ -22,7 +22,7 @@ from scipy.stats import mannwhitneyu
 from statsmodels.stats.multitest import multipletests
 
 
-DEFAULT_H5AD = Path("data/adata_aced_immune_all_CN_k50_n10_with_epithelia_filtered.h5ad")
+DEFAULT_H5AD = Path("data/AS_cellular_neighborhoods.h5ad")
 DEFAULT_GRADE_OUTDIR = Path("manuscript_panels_results/whole_tissue_grade")
 DEFAULT_OUTDIR = Path("manuscript_panels_results/whole_tissue_progression")
 

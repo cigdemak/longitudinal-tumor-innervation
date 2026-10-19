@@ -31,8 +31,8 @@ from scipy.spatial import ConvexHull, QhullError, cKDTree
 
 
 DEFAULT_H5ADS = [
-    Path("data/adata_aced_immune_all_CN_k50_n10_with_epithelia_filtered.h5ad"),
-    Path("data/adata_BLimmune_all_CN_k50_n10_with_epithelia.h5ad"),
+    Path("data/AS_cellular_neighborhoods.h5ad"),
+    Path("data/RP_cellular_neighborhoods.h5ad"),
 ]
 DEFAULT_IMMUNE_LABELS = [
     "T Cells",

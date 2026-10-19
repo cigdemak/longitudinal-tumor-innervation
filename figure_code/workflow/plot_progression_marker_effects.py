@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot archived progression-associated marker effects."""
+"""Plot progression-associated marker effects."""
 
 from __future__ import annotations
 

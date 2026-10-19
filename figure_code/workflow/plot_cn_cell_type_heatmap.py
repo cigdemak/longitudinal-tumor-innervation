@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Plot cellular-neighborhood cell-type heatmaps.
 
-This script reproduces the heatmap idea from the neighborhood notebook using
+This script reproduces the heatmap plot from
+https://github.com/nolanlab/NeighborhoodCoordination using
 the CN labels already stored in the AnnData files. For each cohort and CN, it
 computes cell-type composition and plots log2 enrichment relative to the
 whole-tissue cell-type composition for that cohort.
@@ -16,8 +17,8 @@ from pathlib import Path
 
 
 DEFAULT_H5ADS = [
-    Path("data/adata_aced_immune_all_CN_k50_n10_with_epithelia_filtered.h5ad"),
-    Path("data/adata_BLimmune_all_CN_k50_n10_with_epithelia.h5ad"),
+    Path("data/AS_cellular_neighborhoods.h5ad"),
+    Path("data/RP_cellular_neighborhoods.h5ad"),
 ]
 DEFAULT_OUTDIR = Path("manuscript final figures/figures")
 DEFAULT_TABLE_DIR = Path("manuscript final figures/tables")
@@ -146,9 +147,9 @@ def setup_style() -> None:
 
 def infer_cohort(path: Path) -> str:
     name = path.name.lower()
-    if "aced" in name:
+    if name.startswith("as_"):
         return "aced"
-    if "bl" in name:
+    if name.startswith("rp_"):
         return "bl"
     return path.stem
 

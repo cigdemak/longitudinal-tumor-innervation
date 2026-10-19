@@ -11,30 +11,43 @@ import tempfile
 ROOT = Path(__file__).resolve().parent
 WORKFLOW = ROOT / "workflow"
 H5AD_FILES = {
-    "cn_aced": "adata_aced_immune_all_CN_k50_n10_with_epithelia_filtered.h5ad",
-    "cn_bl": "adata_BLimmune_all_CN_k50_n10_with_epithelia.h5ad",
-    "marker_aced": "adata_aced_immune_updated_tcell_marker_celltypes.h5ad",
-    "marker_bl": "adata_bl_immune_updated_tcell_marker_celltypes.h5ad",
+    "cn_aced": "AS_cellular_neighborhoods.h5ad",
+    "cn_bl": "RP_cellular_neighborhoods.h5ad",
+    "marker_aced": "AS_T_cell_marker_cell_types.h5ad",
+    "marker_bl": "RP_T_cell_marker_cell_types.h5ad",
 }
 AXON_TAGS = (
     "CXCR4pos___CD44pos___FYNpos_Axon",
     "NRXN1pos___MAOApos_Axon",
 )
+AXON_RELEASE_LABELS = {
+    "CXCR4pos___CD44pos___FYNpos_Axon": "CXCR4_CD44_FYN",
+    "NRXN1pos___MAOApos_Axon": "NRXN1_MAOA",
+}
 PPA_FILES = {
-    f"{marker}_{axon}": f"aced_immune_{marker}_{axon}_ppa.h5ad"
-    for marker in ("GZMB", "PD1")
+    f"{marker}_{axon}": f"AS_PPA_T_cell_marker_{marker}_{AXON_RELEASE_LABELS[axon]}_axon.h5ad"
+    for marker in ("AR", "Ki67", "GZMB", "PD1")
     for axon in AXON_TAGS
 }
+CELL_PPA_FILES = {
+    f"radial_{tag}": f"AS_PPA_cell_type_{release_label}_axon.h5ad"
+    for tag, release_label in (
+        ("CXCR4pos_CD44pos_FYNpos_Axon", "CXCR4_CD44_FYN"),
+        ("NRXN1pos_MAOApos_Axon", "NRXN1_MAOA"),
+        ("THpos_Axon", "TH"),
+    )
+}
+INPUT_FILES = {**H5AD_FILES, **PPA_FILES, **CELL_PPA_FILES}
 PANEL_FILES = {
     "figure_4a_cn_heatmap": ("cn_aced", "cn_bl"),
     "figure_4bc_whole_tissue": ("cn_aced", "cn_bl"),
     "figure_4e_window_density": ("cn_aced", "cn_bl"),
     "figure_5b_cn_progression": ("cn_aced",),
-    "figure_5d_local_redistribution": ("local_progression_statistics.csv",),
+    "figure_5d_local_redistribution": tuple(CELL_PPA_FILES),
     "figure_6a_pd1_composition": tuple(f"PD1_{axon}" for axon in AXON_TAGS),
     "figure_6b_whole_tissue_markers": ("marker_aced", "marker_bl"),
     "figure_6cd_axon_marker_fractions": tuple(PPA_FILES),
-    "figure_6ef_progression_effects": ("local_progression_statistics.csv",),
+    "figure_6ef_progression_effects": tuple(PPA_FILES),
 }
 FIGURE_OUTPUTS = {
     "figure_4a_cn_heatmap": ("fig_cn_cell_type_heatmap_combined.pdf",),
@@ -64,28 +77,18 @@ FIGURE_OUTPUTS = {
         "fig_progression_marker_specific_changes_abundance_separate_panel.pdf",
     ),
 }
+PANEL_TABLE_OUTPUTS = {
+    "figure_5d_local_redistribution": ("progression_radial_statistics.csv",),
+    "figure_6ef_progression_effects": ("progression_marker_statistics.csv",),
+}
 
 
 def locate_input(data_dir: Path, name: str) -> Path | None:
-    if name == "local_progression_statistics.csv":
-        candidates = (
-            data_dir / "focused_fdr_master_analysis_table.csv",
-            data_dir / "archived" / "focused_fdr_master_analysis_table.csv",
-            data_dir / "manuscript_panels_results" / "tables" / "focused_fdr_master_analysis_table.csv",
-            data_dir.parent / "manuscript_panels_results" / "tables" / "focused_fdr_master_analysis_table.csv",
-        )
-    else:
-        filename = {**H5AD_FILES, **PPA_FILES}.get(name, name)
-        candidates = (
-            data_dir / filename,
-            data_dir / "data" / filename,
-            data_dir / "PPA_axon_subtypes_marker_split_T_cells" / filename,
-            data_dir.parent / "PPA_axon_subtypes_marker_split_T_cells" / filename,
-        )
-    return next((path for path in candidates if path.is_file()), None)
+    path = data_dir / name
+    return path if path.is_file() else None
 
 
-def panel_commands(panel: str, inputs: dict[str, Path], archive_target: Path) -> list[list[str]]:
+def panel_commands(panel: str, inputs: dict[str, Path], statistics_target: Path) -> list[list[str]]:
     final = "manuscript final figures/figures"
     tables = "manuscript final figures/tables"
     grade_tables = "manuscript_panels_results/whole_tissue_grade/combined"
@@ -96,8 +99,9 @@ def panel_commands(panel: str, inputs: dict[str, Path], archive_target: Path) ->
     cn_bl = str(inputs.get(H5AD_FILES["cn_bl"], ""))
     marker_aced = str(inputs.get(H5AD_FILES["marker_aced"], ""))
     marker_bl = str(inputs.get(H5AD_FILES["marker_bl"], ""))
-    ppa_files = [inputs[name] for name in PPA_FILES.values() if name in inputs]
+    ppa_files = [inputs[INPUT_FILES[name]] for name in PPA_FILES if INPUT_FILES[name] in inputs]
     ppa_dir = str(ppa_files[0].parent) if ppa_files else ""
+    radial_files = [inputs[INPUT_FILES[name]] for name in CELL_PPA_FILES if INPUT_FILES[name] in inputs]
     if panel == "figure_4a_cn_heatmap":
         return [["plot_cn_cell_type_heatmap.py", "--h5ad", cn_aced, cn_bl, "--outdir", final, "--table-dir", tables]]
     if panel == "figure_4bc_whole_tissue":
@@ -117,7 +121,11 @@ def panel_commands(panel: str, inputs: dict[str, Path], archive_target: Path) ->
              "--pvalues", f"{cn_tables}/tables/notebook_method_pvalues_aced.csv", "--figdir", final],
         ]
     if panel == "figure_5d_local_redistribution":
-        return [["plot_local_redistribution.py", "--master", str(archive_target), "--outdir", final]]
+        return [
+            ["analyze_progression_panel_statistics.py", "--mode", "radial", "--cell-ppa",
+             *[str(path) for path in radial_files], "--outdir", str(statistics_target.parent)],
+            ["plot_local_redistribution.py", "--master", str(statistics_target), "--outdir", final],
+        ]
     if panel == "figure_6a_pd1_composition":
         return [
             ["extract_marker_metrics.py", "--input-dir", ppa_dir, "--outdir", "significance_axons_immune_cells",
@@ -141,7 +149,11 @@ def panel_commands(panel: str, inputs: dict[str, Path], archive_target: Path) ->
             ["plot_pd1_progression_barplot.py", "--marker", "GZMB"],
         ]
     if panel == "figure_6ef_progression_effects":
-        return [["plot_progression_marker_effects.py", "--master", str(archive_target), "--outdir", final]]
+        return [
+            ["analyze_progression_panel_statistics.py", "--mode", "markers", "--marker-ppa",
+             *[str(path) for path in ppa_files], "--outdir", str(statistics_target.parent)],
+            ["plot_progression_marker_effects.py", "--master", str(statistics_target), "--outdir", final],
+        ]
     raise ValueError(f"Unknown panel: {panel}")
 
 
@@ -153,10 +165,8 @@ def run_panel(panel: str, data_dir: Path, output_dir: Path) -> None:
     if not data_dir.is_dir():
         raise ValueError(f"Data directory does not exist: {data_dir}")
 
-    file_paths = {**H5AD_FILES, **PPA_FILES}
     required_names = [
-        "local_progression_statistics.csv" if name == "local_progression_statistics.csv" else file_paths[name]
-        for name in PANEL_FILES[panel]
+        INPUT_FILES[name] for name in PANEL_FILES[panel]
     ]
     inputs = {name: locate_input(data_dir, name) for name in required_names}
     missing = [name for name, path in inputs.items() if path is None]
@@ -176,17 +186,11 @@ def run_panel(panel: str, data_dir: Path, output_dir: Path) -> None:
             MKL_NUM_THREADS="1",
             VECLIB_MAXIMUM_THREADS="1",
         )
-        if "local_progression_statistics.csv" in PANEL_FILES[panel]:
-            archive_target = work / "manuscript_panels_results/tables/focused_fdr_master_analysis_table.csv"
-            archive_target.parent.mkdir(parents=True, exist_ok=True)
-            archive_input = inputs["local_progression_statistics.csv"]
-            shutil.copyfile(archive_input, archive_target)
-            selected_commands = []
-        else:
-            archive_target = work / "manuscript_panels_results/tables/focused_fdr_master_analysis_table.csv"
-            selected_commands = []
+        statistics_target = work / "manuscript_panels_results/tables/focused_fdr_master_analysis_table.csv"
+        statistics_target.parent.mkdir(parents=True, exist_ok=True)
+        selected_commands = []
 
-        selected_commands.extend(panel_commands(panel, inputs, archive_target))
+        selected_commands.extend(panel_commands(panel, inputs, statistics_target))
 
         for command in selected_commands:
             log = work / f"{Path(command[0]).stem}.log"
@@ -212,6 +216,11 @@ def run_panel(panel: str, data_dir: Path, output_dir: Path) -> None:
                 asset = source.with_suffix(suffix)
                 if asset.is_file():
                     shutil.copyfile(asset, output_dir / asset.name)
+        for filename in PANEL_TABLE_OUTPUTS.get(panel, ()):
+            matches = list(work.rglob(filename))
+            if len(matches) != 1:
+                raise RuntimeError(f"Expected one {filename}, found {len(matches)}")
+            shutil.copyfile(matches[0], output_dir / filename)
     print(f"Created {len(FIGURE_OUTPUTS[panel])} figure file(s) in {output_dir}")
 
 

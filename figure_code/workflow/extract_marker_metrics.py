@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
-"""Rebuild region-level local T-cell marker counts from ACED PPA H5AD files.
-
-PPA entries are cell–axon-neighborhood occurrences. Overlapping occurrences
-are counted as stored, matching the original figures; they are not deduplicated
-into unique cells. Zero-count regions are retained for abundance, whereas a
-composition with a zero classified-T-cell denominator is undefined and omitted.
+"""Build region-level local T-cell marker counts from Active Surveillance cohort
+PPA H5AD files.
 """
 
 from __future__ import annotations
@@ -25,6 +21,10 @@ MARKERS = ("AR", "Ki67", "GZMB", "PD1")
 AXONS = {
     "CXCR4pos___CD44pos___FYNpos_Axon": "CXCR4+ / CD44+ / FYN+ Axon",
     "NRXN1pos___MAOApos_Axon": "NRXN1+ / MAOA+ Axon",
+}
+AXON_RELEASE_LABELS = {
+    "CXCR4pos___CD44pos___FYNpos_Axon": "CXCR4_CD44_FYN",
+    "NRXN1pos___MAOApos_Axon": "NRXN1_MAOA",
 }
 RADII = (20, 50, 100)
 GROUPS = ("NonProgressor", "Progressor")
@@ -118,7 +118,7 @@ def main() -> None:
     comps, metrics = [], []
     for marker in args.markers:
         for tag in AXONS:
-            path = args.input_dir / f"aced_immune_{marker}_{tag}_ppa.h5ad"
+            path = args.input_dir / f"AS_PPA_T_cell_marker_{marker}_{AXON_RELEASE_LABELS[tag]}_axon.h5ad"
             composition, abundance = extract_file(path, marker, tag)
             comps.append(composition)
             metrics.append(abundance)

@@ -1,23 +1,28 @@
-Input files required by the manuscript figure scripts
+Zenodo H5AD data files for reproducing the figure panels in this repository
 
-Upload these files to Zenodo. Preserve the filenames shown below and place all
-files together in one directory when running the figure scripts.
+Use the descriptive filenames below in the Zenodo record. The reproduction
+runner also accepts the original analysis filenames in the local project
+folders. For the simplest workflow, download all files into one directory and
+run `figure_code/reproduce_all.py --data-dir /path/to/downloaded-files` from
+the code repository root.
 
-Source directory: ../data/
-  adata_aced_immune_all_CN_k50_n10_with_epithelia_filtered.h5ad
-  adata_BLimmune_all_CN_k50_n10_with_epithelia.h5ad
-  adata_aced_immune_updated_tcell_marker_celltypes.h5ad
-  adata_bl_immune_updated_tcell_marker_celltypes.h5ad
+Cellular-neighborhood datasets:
+  AS_cellular_neighborhoods.h5ad
+  RP_cellular_neighborhoods.h5ad
+  AS_T_cell_marker_cell_types.h5ad
+  RP_T_cell_marker_cell_types.h5ad
 
-Source directory: ../PPA_axon_subtypes_marker_split_T_cells/
-  aced_immune_GZMB_CXCR4pos___CD44pos___FYNpos_Axon_ppa.h5ad
-  aced_immune_GZMB_NRXN1pos___MAOApos_Axon_ppa.h5ad
-  aced_immune_PD1_CXCR4pos___CD44pos___FYNpos_Axon_ppa.h5ad
-  aced_immune_PD1_NRXN1pos___MAOApos_Axon_ppa.h5ad
+PPA cell-type datasets for Figure 5d:
+  AS_PPA_cell_type_CXCR4_CD44_FYN_axon.h5ad
+  AS_PPA_cell_type_NRXN1_MAOA_axon.h5ad
+  AS_PPA_cell_type_TH_axon.h5ad
 
-Source directory: ../manuscript_panels_results/tables/
-  focused_fdr_master_analysis_table.csv
-
-This archived results table is required for Figures 5d and 6e-f. It contains
-the precomputed progression-effect statistics plotted in those panels. The
-figure workflow does not regenerate the underlying model results or table.
+PPA T-cell marker datasets for Figures 6a, 6c-d, and 6e-f:
+  AS_PPA_T_cell_marker_AR_CXCR4_CD44_FYN_axon.h5ad
+  AS_PPA_T_cell_marker_AR_NRXN1_MAOA_axon.h5ad
+  AS_PPA_T_cell_marker_Ki67_CXCR4_CD44_FYN_axon.h5ad
+  AS_PPA_T_cell_marker_Ki67_NRXN1_MAOA_axon.h5ad
+  AS_PPA_T_cell_marker_GZMB_CXCR4_CD44_FYN_axon.h5ad
+  AS_PPA_T_cell_marker_GZMB_NRXN1_MAOA_axon.h5ad
+  AS_PPA_T_cell_marker_PD1_CXCR4_CD44_FYN_axon.h5ad
+  AS_PPA_T_cell_marker_PD1_NRXN1_MAOA_axon.h5ad

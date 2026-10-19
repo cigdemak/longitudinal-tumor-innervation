@@ -22,8 +22,8 @@ from scipy.stats import mannwhitneyu
 from statsmodels.stats.multitest import multipletests
 
 
-DEFAULT_ACED_MARKER_H5AD = Path(
-    "PPA_axon_subtypes_marker_split_T_cells/aced_immune_AR_CXCR4pos___CD44pos___FYNpos_Axon_ppa.h5ad"
+DEFAULT_AS_MARKER_H5AD = Path(
+    "data/AS_T_cell_marker_cell_types.h5ad"
 )
 DEFAULT_OUTDIR = Path("manuscript_panels_results/whole_tissue_tcell_marker_progression")
 
@@ -51,7 +51,7 @@ ANALYSIS_SETTINGS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Whole-sample T-cell marker positivity analyses.")
-    parser.add_argument("--h5ad", type=Path, nargs="+", default=[DEFAULT_ACED_MARKER_H5AD])
+    parser.add_argument("--h5ad", type=Path, nargs="+", default=[DEFAULT_AS_MARKER_H5AD])
     parser.add_argument("--analysis", choices=sorted(ANALYSIS_SETTINGS), default="progression")
     parser.add_argument("--outdir", type=Path)
     parser.add_argument("--cohort-label", default=None)
@@ -66,9 +66,9 @@ def parse_args() -> argparse.Namespace:
 
 def infer_cohort(path: Path) -> str:
     name = path.name.lower()
-    if name.startswith("bl_") or name.startswith("adata_bl") or "blimmune" in name:
+    if name.startswith("rp_"):
         return "bl"
-    if name.startswith("aced_") or "aced" in name:
+    if name.startswith("as_"):
         return "aced"
     return path.stem
 

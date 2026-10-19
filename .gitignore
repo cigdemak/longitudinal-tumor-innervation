@@ -6,6 +6,7 @@ __pycache__/
 *.h5ad
 *.hdf5
 outputs/
+zenodo_upload/
 data/
 PPA_axon_subtypes_*/
 .env

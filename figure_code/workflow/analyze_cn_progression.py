@@ -1,14 +1,5 @@
 #!/usr/bin/env python3
 """Analyze cellular-neighborhood enrichment during progression.
-
-The model follows the notebook structure:
-
-X = [overall cell-type log fraction, group, constant]
-Y = neighborhood-specific cell-type log fraction
-sm.OLS(Y, X).fit()
-
-The output reports the raw group coefficient and raw p-value. No FDR/BH
-correction is applied in this script.
 """
 
 from __future__ import annotations
@@ -38,8 +29,8 @@ import statsmodels.api as sm
 
 
 DEFAULT_H5ADS = [
-    Path("data/adata_aced_immune_all_CN_k50_n10_with_epithelia_filtered.h5ad"),
-    Path("data/adata_BLimmune_all_CN_k50_n10_with_epithelia.h5ad"),
+    Path("data/AS_cellular_neighborhoods.h5ad"),
+    Path("data/RP_cellular_neighborhoods.h5ad"),
 ]
 DEFAULT_STRATA = Path("results/patient_axon_density_stratification_cn_ab_samples/tables/patient_axon_density.csv")
 
@@ -90,9 +81,9 @@ def parse_args() -> argparse.Namespace:
 
 def infer_cohort(path: Path) -> str:
     name = path.name.lower()
-    if "bl" in name:
+    if name.startswith("rp_"):
         return "bl"
-    if "aced" in name:
+    if name.startswith("as_"):
         return "aced"
     return path.stem
 
