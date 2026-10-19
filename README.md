@@ -3,7 +3,7 @@
 Code accompanying Ak, Ait-Ahmad et al., “Longitudinal Analysis of Tumor Innervation Identifies Dynamic Neuroimmune Niches in Prostate Cancer,” submitted to *Nature Cancer*.
 
 The H5AD inputs needed to reproduce the figure panels are listed in
-[zenodo_upload_inputs.txt](zenodo_upload_inputs.txt).
+[zenodo_data_files.md](zenodo_data_files.md).
 
 ## Run a figure script
 
@@ -38,5 +38,5 @@ python figure_code/figure_5d_local_redistribution.py \
 - `figure_6cd_axon_marker_fractions.py` (Figure 6c–d)
 - `figure_6ef_progression_effects.py` (Figure 6e–f)
 
-See [zenodo_upload_inputs.txt](zenodo_upload_inputs.txt) for the complete H5AD
+See [zenodo_data_files.md](zenodo_data_files.md) for the complete H5AD
 input list. Install dependencies from `requirements.txt` before running.
