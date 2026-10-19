@@ -102,7 +102,7 @@ def main() -> None:
 
     sub = master.loc[
         master["analysis_family"].eq("progression_radial_distribution")
-        & master["cohort"].eq("aced")
+        & master["cohort"].eq("as")
         & master["axon_a"].eq("CXCR4+ / CD44+ / FYN+ Axon")
         & master["radius_um"].eq(100)
         & master["cell_type"].isin(CELL_ORDER)

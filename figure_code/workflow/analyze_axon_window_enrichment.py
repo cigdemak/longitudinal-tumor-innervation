@@ -125,16 +125,16 @@ def parse_args() -> argparse.Namespace:
 
 def infer_cohort(path: Path) -> str:
     name = path.name.lower()
-    if "bl" in name:
-        return "bl"
-    if "aced" in name:
-        return "aced"
+    if name.startswith("rp_"):
+        return "rp"
+    if name.startswith("as_"):
+        return "as"
     return path.stem
 
 
 def parse_patient_id(cohort: str, unique_region: object) -> str:
     text = str(unique_region)
-    if cohort == "aced":
+    if cohort == "as":
         match = re.search(r"/Batch\d+/([^_]+_[^_]+_[AB])(?:_|$)", text)
         if match:
             return match.group(1)
@@ -154,9 +154,9 @@ def display_label(value: object) -> str:
     text = clean_str(value).replace("_", " ")
     text = re.sub(r"\s+", " ", text).strip()
     overrides = {
-        "aced": "AS",
-        "bl": "RP",
-        "aced and bl": "AS and RP",
+        "as": "AS",
+        "rp": "RP",
+        "as and rp": "AS and RP",
         "all immune": "All immune",
     }
     return overrides.get(text.lower(), text)

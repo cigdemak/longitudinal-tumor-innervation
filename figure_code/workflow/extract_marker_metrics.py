@@ -70,7 +70,7 @@ def extract_file(path: Path, marker: str, tag: str) -> tuple[pd.DataFrame, pd.Da
             if unknown:
                 raise ValueError(f"PPA has regions absent from obs: {sorted(unknown)}")
             for region, meta in metadata.iterrows():
-                base = dict(df="aced", unique_region=region, condition=meta.condition, progression=meta.progression,
+                base = dict(df="as", unique_region=region, condition=meta.condition, progression=meta.progression,
                             marker=marker, axon=AXONS[tag], axon_tag=tag, radius_um=radius)
                 n = {state: int(near.get((region, label), 0)) for state, label in labels.items()}
                 total = n["positive"] + n["negative"]

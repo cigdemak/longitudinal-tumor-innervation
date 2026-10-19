@@ -94,7 +94,7 @@ def panel_commands(panel: str, inputs: dict[str, Path], statistics_target: Path)
     grade_tables = "manuscript_panels_results/whole_tissue_grade/combined"
     marker_grade_tables = "manuscript_panels_results/whole_tissue_tcell_marker_grade/combined"
     marker_progression_tables = "manuscript_panels_results/whole_tissue_tcell_marker_progression"
-    cn_tables = "results/cn_neighborhood_enrichment_progression_aced"
+    cn_tables = "results/cn_neighborhood_enrichment_progression_as"
     cn_as = str(inputs.get(H5AD_FILES["cn_as"], ""))
     cn_rp = str(inputs.get(H5AD_FILES["cn_rp"], ""))
     marker_as = str(inputs.get(H5AD_FILES["marker_as"], ""))
@@ -117,8 +117,8 @@ def panel_commands(panel: str, inputs: dict[str, Path], statistics_target: Path)
         return [
             ["analyze_cn_progression.py", "--group-by", "progression", "--h5ad", cn_as,
              "--outdir", cn_tables],
-            ["plot_cn_progression.py", "--coefficients", f"{cn_tables}/tables/notebook_method_coefficients_aced.csv",
-             "--pvalues", f"{cn_tables}/tables/notebook_method_pvalues_aced.csv", "--figdir", final],
+            ["plot_cn_progression.py", "--coefficients", f"{cn_tables}/tables/notebook_method_coefficients_as.csv",
+             "--pvalues", f"{cn_tables}/tables/notebook_method_pvalues_as.csv", "--figdir", final],
         ]
     if panel == "figure_5d_local_redistribution":
         return [

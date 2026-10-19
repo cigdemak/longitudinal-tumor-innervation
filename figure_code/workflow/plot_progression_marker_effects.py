@@ -96,7 +96,7 @@ def prepare_progression_subset(master: pd.DataFrame, analysis_family: str) -> pd
     family_col = "analysis_family" if "analysis_family" in master.columns else "analysis"
     mask = master[family_col].eq(analysis_family)
     if "cohort" in master.columns:
-        mask &= master["cohort"].eq("aced")
+        mask &= master["cohort"].eq("as")
     sub = master.loc[mask].copy()
     sub = clean_numeric(sub, ["radius_um", "effect_size", "p_value", "q_value"])
     sub = ensure_text(sub, ["axon_a", "cell_type", "endpoint"])

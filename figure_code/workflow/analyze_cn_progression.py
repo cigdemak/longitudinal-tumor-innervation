@@ -82,15 +82,15 @@ def parse_args() -> argparse.Namespace:
 def infer_cohort(path: Path) -> str:
     name = path.name.lower()
     if name.startswith("rp_"):
-        return "bl"
+        return "rp"
     if name.startswith("as_"):
-        return "aced"
+        return "as"
     return path.stem
 
 
 def parse_sample_id(cohort: str, unique_region: object) -> str:
     text = str(unique_region)
-    if cohort == "aced":
+    if cohort == "as":
         match = re.search(r"/Batch\d+/([^_]+_[^_]+_[AB])(?:_|$)", text)
         if match:
             return match.group(1)

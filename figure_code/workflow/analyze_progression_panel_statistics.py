@@ -135,9 +135,9 @@ def extract_cell_type_metrics(paths: list[Path]) -> pd.DataFrame:
                         continue
                     for radius in RADII:
                         records.append({
-                            "df": "aced",
+                            "df": "as",
                             "adata": "immune",
-                            "region_id": f"aced|immune|{meta.unique_region}",
+                            "region_id": f"as|immune|{meta.unique_region}",
                             "unique_region": meta.unique_region,
                             "condition": meta.condition,
                             "progression": meta.progression,
@@ -217,7 +217,7 @@ def radial_statistics(metrics: pd.DataFrame) -> pd.DataFrame:
                 effect, p_value = permutation_effect(data[metric].to_numpy(), labels, rng)
                 rows.append({
                     "analysis_family": "progression_radial_distribution",
-                    "cohort": "aced",
+                    "cohort": "as",
                     "axon_a": axon,
                     "cell_type": target,
                     "radius_um": 100,
@@ -354,7 +354,7 @@ def marker_statistics(paths: list[Path]) -> pd.DataFrame:
                 effect, p_value, model = fit_count_model(data)
                 rows.append({
                     "analysis_family": "progression_marker_abundance",
-                    "cohort": "aced",
+                    "cohort": "as",
                     "axon_a": axon,
                     "cell_type": MARKER_CELL_LABELS[marker],
                     "radius_um": radius,
@@ -381,7 +381,7 @@ def marker_statistics(paths: list[Path]) -> pd.DataFrame:
                 )
                 rows.append({
                     "analysis_family": "progression_marker_composition",
-                    "cohort": "aced",
+                    "cohort": "as",
                     "axon_a": axon,
                     "cell_type": f"{marker}+ fraction among nearby T Cells",
                     "radius_um": radius,

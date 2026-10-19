@@ -67,20 +67,20 @@ def parse_args() -> argparse.Namespace:
 def infer_cohort(path: Path) -> str:
     name = path.name.lower()
     if name.startswith("rp_"):
-        return "bl"
+        return "rp"
     if name.startswith("as_"):
-        return "aced"
+        return "as"
     return path.stem
 
 
 def default_cohort_label(paths: list[Path]) -> str:
     cohorts = [infer_cohort(path) for path in paths]
     unique = list(dict.fromkeys(cohorts))
-    if unique == ["aced"]:
+    if unique == ["as"]:
         return "AS"
-    if unique == ["bl"]:
+    if unique == ["rp"]:
         return "RP"
-    if set(unique) == {"aced", "bl"}:
+    if set(unique) == {"as", "rp"}:
         return "AS + RP"
     return " + ".join(unique)
 

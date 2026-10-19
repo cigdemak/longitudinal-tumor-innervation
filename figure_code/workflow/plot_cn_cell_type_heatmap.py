@@ -96,7 +96,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--cell-type-column", default="cell_type_sync")
     parser.add_argument(
         "--cohort",
-        choices=["all", "aced", "bl", "combined"],
+        choices=["all", "as", "rp", "combined"],
         default="all",
         help="Which cohort heatmap to write. 'all' writes AS, RP, and combined.",
     )
@@ -148,9 +148,9 @@ def setup_style() -> None:
 def infer_cohort(path: Path) -> str:
     name = path.name.lower()
     if name.startswith("as_"):
-        return "aced"
+        return "as"
     if name.startswith("rp_"):
-        return "bl"
+        return "rp"
     return path.stem
 
 
@@ -219,9 +219,9 @@ def display_cell_type_single_line(label: str) -> str:
 
 
 def cohort_title_label(cohort: str) -> str:
-    if cohort == "aced":
+    if cohort == "as":
         return "AS"
-    if cohort == "bl":
+    if cohort == "rp":
         return "RP"
     if cohort == "combined":
         return "AS + RP"
