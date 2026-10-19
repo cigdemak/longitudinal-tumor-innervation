@@ -56,8 +56,8 @@ FIGURE_OUTPUTS = {
         "fig_whole_tissue_grade_region_immune_fraction_separate_panel.pdf",
         "fig_whole_tissue_grade_immune_density_separate_panel.pdf",
     ),
-    "figure_4e_window_density": ("fig_axon_immune_target_window_density_background_vs_axon_aced_bl_combined.pdf",),
-    "figure_5b_cn_progression": ("aced_progression_paper_ready.pdf",),
+    "figure_4e_window_density": ("fig_axon_immune_target_window_density_background_vs_axon_as_rp_combined.pdf",),
+    "figure_5b_cn_progression": ("AS_progression_paper_ready.pdf",),
     "figure_5d_local_redistribution": ("fig_progression_local_redistribution.pdf",),
     "figure_6a_pd1_composition": ("PD1_raw_composition_donuts.pdf",),
     "figure_6b_whole_tissue_markers": (

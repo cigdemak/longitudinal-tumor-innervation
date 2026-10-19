@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot cellular-neighborhood enrichment during ACED progression."""
+"""Plot cellular-neighborhood enrichment during AS progression."""
 
 from __future__ import annotations
 
@@ -8,10 +8,10 @@ import math
 import os
 from pathlib import Path
 
-DEFAULT_INDIR = Path("results/cn_neighborhood_enrichment_notebook_method_progression_aced")
+DEFAULT_INDIR = Path("results/cn_neighborhood_enrichment_notebook_method_progression_as")
 DEFAULT_FIGDIR = DEFAULT_INDIR / "figures"
-DEFAULT_COEFFICIENTS = DEFAULT_INDIR / "tables" / "notebook_method_coefficients_aced.csv"
-DEFAULT_PVALUES = DEFAULT_INDIR / "tables" / "notebook_method_pvalues_aced.csv"
+DEFAULT_COEFFICIENTS = DEFAULT_INDIR / "tables" / "notebook_method_coefficients_as.csv"
+DEFAULT_PVALUES = DEFAULT_INDIR / "tables" / "notebook_method_pvalues_as.csv"
 
 MPLCONFIG_DIR = DEFAULT_INDIR / "mplconfig"
 MPLCONFIG_DIR.mkdir(parents=True, exist_ok=True)
@@ -70,12 +70,12 @@ CELL_LABELS = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Replot the ACED progression CN enrichment heatmap with manuscript styling."
+        description="Replot the AS progression CN enrichment heatmap with manuscript styling."
     )
     parser.add_argument("--coefficients", type=Path, default=DEFAULT_COEFFICIENTS)
     parser.add_argument("--pvalues", type=Path, default=DEFAULT_PVALUES)
     parser.add_argument("--figdir", type=Path, default=DEFAULT_FIGDIR)
-    parser.add_argument("--prefix", default="aced_progression_paper_ready")
+    parser.add_argument("--prefix", default="AS_progression_paper_ready")
     parser.add_argument(
         "--horizontal",
         action="store_true",

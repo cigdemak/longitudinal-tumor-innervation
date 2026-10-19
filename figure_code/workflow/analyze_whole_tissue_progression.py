@@ -65,7 +65,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--cohort-label",
         default=None,
-        help="Display label for the figure title, for example ACED, BL, or ACED + BL.",
+        help="Display label for the figure title, for example AS, RP, or AS + RP.",
     )
     return parser.parse_args()
 
@@ -83,11 +83,11 @@ def default_cohort_label(paths: list[Path]) -> str:
     cohorts = [infer_cohort(path) for path in paths]
     unique = list(dict.fromkeys(cohorts))
     if unique == ["aced"]:
-        return "ACED"
+        return "AS"
     if unique == ["bl"]:
-        return "BL"
+        return "RP"
     if set(unique) == {"aced", "bl"}:
-        return "ACED + BL"
+        return "AS + RP"
     return " + ".join(unique)
 
 

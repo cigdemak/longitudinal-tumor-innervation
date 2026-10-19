@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Analyze axon-window enrichment in the ACED and BL cohorts."""
+"""Analyze axon-window enrichment in the AS and RP cohorts."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import os
 import re
 from pathlib import Path
 
-DEFAULT_OUTDIR = Path("results/axon_immune_spatial_enrichment_aced_bl_combined_plot")
+DEFAULT_OUTDIR = Path("results/axon_immune_spatial_enrichment_as_rp_combined_plot")
 DEFAULT_OUTDIR.mkdir(parents=True, exist_ok=True)
 os.environ.setdefault("MPLCONFIGDIR", str(DEFAULT_OUTDIR / "mplconfig"))
 os.environ.setdefault("XDG_CACHE_HOME", str(DEFAULT_OUTDIR / "cache"))
@@ -45,8 +45,8 @@ DEFAULT_IMMUNE_LABELS = [
 ]
 DENSITY_SCALE = 1_000_000.0
 EPS = 1e-12
-COMBINED_COHORT_LABEL = "ACED and BL"
-COMBINED_PLOT_SUFFIX = "aced_bl_combined"
+COMBINED_COHORT_LABEL = "AS and RP"
+COMBINED_PLOT_SUFFIX = "as_rp_combined"
 
 
 def parse_args() -> argparse.Namespace:
@@ -154,9 +154,9 @@ def display_label(value: object) -> str:
     text = clean_str(value).replace("_", " ")
     text = re.sub(r"\s+", " ", text).strip()
     overrides = {
-        "aced": "ACED",
-        "bl": "BL",
-        "aced and bl": "ACED and BL",
+        "aced": "AS",
+        "bl": "RP",
+        "aced and bl": "AS and RP",
         "all immune": "All immune",
     }
     return overrides.get(text.lower(), text)

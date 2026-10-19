@@ -77,11 +77,11 @@ def default_cohort_label(paths: list[Path]) -> str:
     cohorts = [infer_cohort(path) for path in paths]
     unique = list(dict.fromkeys(cohorts))
     if unique == ["aced"]:
-        return "ACED"
+        return "AS"
     if unique == ["bl"]:
-        return "BL"
+        return "RP"
     if set(unique) == {"aced", "bl"}:
-        return "ACED + BL"
+        return "AS + RP"
     return " + ".join(unique)
 
 

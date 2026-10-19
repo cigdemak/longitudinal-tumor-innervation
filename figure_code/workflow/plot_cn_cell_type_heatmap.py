@@ -98,7 +98,7 @@ def parse_args() -> argparse.Namespace:
         "--cohort",
         choices=["all", "aced", "bl", "combined"],
         default="all",
-        help="Which cohort heatmap to write. 'all' writes ACED, BL, and combined.",
+        help="Which cohort heatmap to write. 'all' writes AS, RP, and combined.",
     )
     parser.add_argument(
         "--orientation",
@@ -220,11 +220,11 @@ def display_cell_type_single_line(label: str) -> str:
 
 def cohort_title_label(cohort: str) -> str:
     if cohort == "aced":
-        return "ACED"
+        return "AS"
     if cohort == "bl":
-        return "BL"
+        return "RP"
     if cohort == "combined":
-        return "ACED + BL"
+        return "AS + RP"
     return cohort
 
 
