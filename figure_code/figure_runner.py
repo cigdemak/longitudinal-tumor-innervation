@@ -11,10 +11,10 @@ import tempfile
 ROOT = Path(__file__).resolve().parent
 WORKFLOW = ROOT / "workflow"
 H5AD_FILES = {
-    "cn_aced": "AS_cellular_neighborhoods.h5ad",
-    "cn_bl": "RP_cellular_neighborhoods.h5ad",
-    "marker_aced": "AS_T_cell_marker_cell_types.h5ad",
-    "marker_bl": "RP_T_cell_marker_cell_types.h5ad",
+    "cn_as": "AS_cellular_neighborhoods.h5ad",
+    "cn_rp": "RP_cellular_neighborhoods.h5ad",
+    "marker_as": "AS_T_cell_marker_cell_types.h5ad",
+    "marker_rp": "RP_T_cell_marker_cell_types.h5ad",
 }
 AXON_TAGS = (
     "CXCR4pos___CD44pos___FYNpos_Axon",
@@ -39,13 +39,13 @@ CELL_PPA_FILES = {
 }
 INPUT_FILES = {**H5AD_FILES, **PPA_FILES, **CELL_PPA_FILES}
 PANEL_FILES = {
-    "figure_4a_cn_heatmap": ("cn_aced", "cn_bl"),
-    "figure_4bc_whole_tissue": ("cn_aced", "cn_bl"),
-    "figure_4e_window_density": ("cn_aced", "cn_bl"),
-    "figure_5b_cn_progression": ("cn_aced",),
+    "figure_4a_cn_heatmap": ("cn_as", "cn_rp"),
+    "figure_4bc_whole_tissue": ("cn_as", "cn_rp"),
+    "figure_4e_window_density": ("cn_as", "cn_rp"),
+    "figure_5b_cn_progression": ("cn_as",),
     "figure_5d_local_redistribution": tuple(CELL_PPA_FILES),
     "figure_6a_pd1_composition": tuple(f"PD1_{axon}" for axon in AXON_TAGS),
-    "figure_6b_whole_tissue_markers": ("marker_aced", "marker_bl"),
+    "figure_6b_whole_tissue_markers": ("marker_as", "marker_rp"),
     "figure_6cd_axon_marker_fractions": tuple(PPA_FILES),
     "figure_6ef_progression_effects": tuple(PPA_FILES),
 }
@@ -95,27 +95,27 @@ def panel_commands(panel: str, inputs: dict[str, Path], statistics_target: Path)
     marker_grade_tables = "manuscript_panels_results/whole_tissue_tcell_marker_grade/combined"
     marker_progression_tables = "manuscript_panels_results/whole_tissue_tcell_marker_progression"
     cn_tables = "results/cn_neighborhood_enrichment_progression_aced"
-    cn_aced = str(inputs.get(H5AD_FILES["cn_aced"], ""))
-    cn_bl = str(inputs.get(H5AD_FILES["cn_bl"], ""))
-    marker_aced = str(inputs.get(H5AD_FILES["marker_aced"], ""))
-    marker_bl = str(inputs.get(H5AD_FILES["marker_bl"], ""))
+    cn_as = str(inputs.get(H5AD_FILES["cn_as"], ""))
+    cn_rp = str(inputs.get(H5AD_FILES["cn_rp"], ""))
+    marker_as = str(inputs.get(H5AD_FILES["marker_as"], ""))
+    marker_rp = str(inputs.get(H5AD_FILES["marker_rp"], ""))
     ppa_files = [inputs[INPUT_FILES[name]] for name in PPA_FILES if INPUT_FILES[name] in inputs]
     ppa_dir = str(ppa_files[0].parent) if ppa_files else ""
     radial_files = [inputs[INPUT_FILES[name]] for name in CELL_PPA_FILES if INPUT_FILES[name] in inputs]
     if panel == "figure_4a_cn_heatmap":
-        return [["plot_cn_cell_type_heatmap.py", "--h5ad", cn_aced, cn_bl, "--outdir", final, "--table-dir", tables]]
+        return [["plot_cn_cell_type_heatmap.py", "--h5ad", cn_as, cn_rp, "--outdir", final, "--table-dir", tables]]
     if panel == "figure_4bc_whole_tissue":
         return [
-            ["analyze_whole_tissue_progression.py", "--analysis", "grade", "--h5ad", cn_aced, cn_bl,
+            ["analyze_whole_tissue_progression.py", "--analysis", "grade", "--h5ad", cn_as, cn_rp,
              "--outdir", grade_tables],
             ["plot_whole_tissue_grade.py", "--table-dir", f"{grade_tables}/tables", "--figure-dir", final],
         ]
     if panel == "figure_4e_window_density":
-        return [["analyze_axon_window_enrichment.py", "--h5ad", cn_aced, cn_bl,
+        return [["analyze_axon_window_enrichment.py", "--h5ad", cn_as, cn_rp,
                  "--outdir", "results/axon_window_enrichment"]]
     if panel == "figure_5b_cn_progression":
         return [
-            ["analyze_cn_progression.py", "--group-by", "progression", "--h5ad", cn_aced,
+            ["analyze_cn_progression.py", "--group-by", "progression", "--h5ad", cn_as,
              "--outdir", cn_tables],
             ["plot_cn_progression.py", "--coefficients", f"{cn_tables}/tables/notebook_method_coefficients_aced.csv",
              "--pvalues", f"{cn_tables}/tables/notebook_method_pvalues_aced.csv", "--figdir", final],
@@ -134,9 +134,9 @@ def panel_commands(panel: str, inputs: dict[str, Path], statistics_target: Path)
         ]
     if panel == "figure_6b_whole_tissue_markers":
         return [
-            ["analyze_tcell_marker_positivity.py", "--analysis", "grade", "--h5ad", marker_aced, marker_bl,
+            ["analyze_tcell_marker_positivity.py", "--analysis", "grade", "--h5ad", marker_as, marker_rp,
              "--outdir", marker_grade_tables],
-            ["analyze_tcell_marker_positivity.py", "--analysis", "progression", "--h5ad", marker_aced,
+            ["analyze_tcell_marker_positivity.py", "--analysis", "progression", "--h5ad", marker_as,
              "--outdir", marker_progression_tables],
             ["plot_tcell_marker_grade.py", "--table-dir", f"{marker_grade_tables}/tables", "--figure-dir", final],
             ["plot_tcell_marker_progression.py", "--table-dir", f"{marker_progression_tables}/tables", "--figure-dir", final],
