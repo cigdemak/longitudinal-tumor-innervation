@@ -1,10 +1,9 @@
 Zenodo H5AD data files for reproducing the figure panels in this repository
 
-Use the descriptive filenames below in the Zenodo record. The reproduction
-runner also accepts the original analysis filenames in the local project
-folders. For the simplest workflow, download all files into one directory and
-run `figure_code/reproduce_all.py --data-dir /path/to/downloaded-files` from
-the code repository root.
+Use the descriptive filenames below in the Zenodo record. For the simplest
+workflow, download all files into one directory and run
+`figure_code/reproduce_all.py --data-dir /path/to/downloaded-files` from the
+code repository root.
 
 Cellular-neighborhood datasets:
   AS_cellular_neighborhoods.h5ad
